@@ -1,0 +1,18 @@
+diff --git a/eng/native/init-compiler.sh b/eng/native/init-compiler.sh
+index 567d18da474..927b3071e92 100755
+--- a/eng/native/init-compiler.sh
++++ b/eng/native/init-compiler.sh
+@@ -108,11 +108,8 @@
+ fi
+ 
+ if [[ "$compiler" == "clang" ]]; then
+-    if command -v "lld$desired_version" > /dev/null; then
+-        # Only lld version >= 9 can be considered stable
+-        if [[ "$majorVersion" -ge 9 ]]; then
+-            LDFLAGS="-fuse-ld=lld"
+-        fi
++    if "$CC" -fuse-ld=lld -Wl,--version >/dev/null 2>&1; then
++        LDFLAGS="-fuse-ld=lld"
+     fi
+ fi
+ 
