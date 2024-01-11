@@ -1,0 +1,10 @@
+--- a/src/Tools/ReleaseNotesUtil/ReleaseNotesUtil.csproj
++++ b/src/Tools/ReleaseNotesUtil/ReleaseNotesUtil.csproj
+@@ -4,6 +4,7 @@
+     <TargetFramework>netcoreapp3.1</TargetFramework>
+     <NonShipping>true</NonShipping>
+     <ExcludeFromSourceBuild>true</ExcludeFromSourceBuild>
++    <UseAppHost>false</UseAppHost>
+   </PropertyGroup>  
+   <ItemGroup>
+     <PackageReference Include="Microsoft.CodeAnalysis" Version="$(MicrosoftCodeAnalysisVersion)" />

@@ -1,0 +1,21 @@
+--- a/tests/benchmarks/MicroPerf/MicroPerf.fsproj
++++ b/tests/benchmarks/MicroPerf/MicroPerf.fsproj
+@@ -9,6 +9,7 @@
+     <OtherFlags>$(OtherFlags) --nowarn:57</OtherFlags>
+     <OtherFlags>$(OtherFlags) --langversion:preview</OtherFlags>
+     <OtherFlags>$(OtherFlags) --define:PREVIEW</OtherFlags>
++    <UseAppHost>false</UseAppHost>
+     <!-- By default this project will compile with the proto compiler -->
+     <!-- Uncommenting this will build with a previous installed compiler  -->
+     <!--
+--- a/tests/benchmarks/TaskPerf/TaskPerf.fsproj
++++ b/tests/benchmarks/TaskPerf/TaskPerf.fsproj
+@@ -4,6 +4,7 @@
+     <TargetFramework>net5.0</TargetFramework>
+     <OutputType>Exe</OutputType>
+     <DisableImplicitFSharpCoreReference>true</DisableImplicitFSharpCoreReference>
++    <UseAppHost>false</UseAppHost>
+     <!-- Turn off "This function is for use by compiled F# code and should not be used directly" -->
+ 	<OtherFlags>$(OtherFlags) --nowarn:1204</OtherFlags>
+     <!-- Turn off "Experimental" -->
+

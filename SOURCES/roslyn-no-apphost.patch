@@ -1,0 +1,10 @@
+--- a/src/Workspaces/Remote/ServiceHub.CoreComponents/Microsoft.CodeAnalysis.Remote.ServiceHub.CoreComponents.csproj
++++ b/src/Workspaces/Remote/ServiceHub.CoreComponents/Microsoft.CodeAnalysis.Remote.ServiceHub.CoreComponents.csproj
+@@ -5,6 +5,7 @@
+     <OutputType>Exe</OutputType>
+     <TargetFramework>netcoreapp3.1</TargetFramework>
+     <!-- The purpose of this project is to include all dependecies of Microsoft.CodeAnalysis.Remote.ServiceHub targeting .Net Core -->
++    <UseAppHost>false</UseAppHost>
+     <IsShipping>false</IsShipping>
+   </PropertyGroup>
+   <ItemGroup>
