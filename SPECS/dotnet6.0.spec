@@ -20,10 +20,10 @@
 # until that's done, disable LTO.  This has to happen before setting the flags below.
 %define _lto_cflags %{nil}
 
-%global host_version 6.0.23
-%global runtime_version 6.0.23
+%global host_version 6.0.24
+%global runtime_version 6.0.24
 %global aspnetcore_runtime_version %{runtime_version}
-%global sdk_version 6.0.123
+%global sdk_version 6.0.124
 %global sdk_feature_band_version %(echo %{sdk_version} | sed -e 's|[[:digit:]][[:digit:]]$|00|')
 %global templates_version %{runtime_version}
 #%%global templates_version %%(echo %%{runtime_version} | awk 'BEGIN { FS="."; OFS="." } {print $1, $2, $3+1 }')
@@ -60,7 +60,7 @@
 
 Name:           dotnet6.0
 Version:        %{sdk_rpm_version}
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        .NET Runtime and SDK
 License:        MIT and ASL 2.0 and BSD and LGPLv2+ and CC-BY and CC0 and MS-PL and EPL-1.0 and GPL+ and GPLv2 and ISC and OFL and zlib
 URL:            https://github.com/dotnet/
@@ -609,33 +609,29 @@ rm -rf %{buildroot}%{_libdir}/dotnet/packs/NETStandard.Library.Ref/2.1.0
 
 
 %changelog
-* Wed Oct 04 2023 Omair Majid <omajid@redhat.com> - 6.0.123-1
+* Tue Oct 24 2023 Omair Majid <omajid@redhat.com> - 6.0.124-2
+- Update to .NET SDK 6.0.124 and Runtime 6.0.24
+- Resolves: RHEL-14462
+
+* Mon Oct 16 2023 Omair Majid <omajid@redhat.com> - 6.0.123-2
 - Update to .NET SDK 6.0.123 and Runtime 6.0.23
-- Resolves: RHEL-11688
+- Resolves: RHEL-11689
 
-* Fri Sep 01 2023 Omair Majid <omajid@redhat.com> - 6.0.122-1
+* Tue Sep 12 2023 Omair Majid <omajid@redhat.com> - 6.0.122-2
 - Update to .NET SDK 6.0.122 and Runtime 6.0.22
-- Resolves: RHEL-2014
+- Resolves: RHEL-1997
 
-* Wed Aug 02 2023 Omair Majid <omajid@redhat.com> - 6.0.121-1
+* Wed Aug 09 2023 Omair Majid <omajid@redhat.com> - 6.0.121-2
 - Update to .NET SDK 6.0.121 and Runtime 6.0.21
-- Resolves: RHBZ#2228569
+- Resolves: RHBZ#2228567
 
-* Tue Jul 04 2023 Omair Majid <omajid@redhat.com> - 6.0.120-1
+* Tue Jul 11 2023 Omair Majid <omajid@redhat.com> - 6.0.120-2
 - Update to .NET SDK 6.0.120 and Runtime 6.0.20
-- Resolves: RHBZ#2219640
+- Resolves: RHBZ#2219637
 
-* Tue Jun 20 2023 Omair Majid <omajid@redhat.com> - 6.0.119-1
-- Update to .NET SDK 6.0.119 and Runtime 6.0.19
-- Resolves: RHBZ#2216220
-
-* Thu Jun 01 2023 Andrew Slice <andrew.slice@redhat.com> - 6.0.118-1
+* Tue Jun 13 2023 Andrew Slice <andrew.slice@redhat.com> - 6.0.118-2
 - Update to .NET SDK 6.0.118 and Runtime 6.0.18
-- Resolves: RHBZ#2212379
-
-* Thu Apr 27 2023 Omair Majid <omajid@redhat.com> - 6.0.117-1
-- Update to .NET SDK 6.0.117 and Runtime 6.0.17
-- Resolves: RHBZ#2190264
+- Resolves: RHBZ#2211719
 
 * Wed Apr 12 2023 Omair Majid <omajid@redhat.com> - 6.0.116-2
 - Update to .NET SDK 6.0.116 and Runtime 6.0.16
