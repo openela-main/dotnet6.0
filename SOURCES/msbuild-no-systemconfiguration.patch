@@ -1,0 +1,46 @@
+--- a/src/Build/Definition/ProjectCollection.cs
++++ b/src/Build/Definition/ProjectCollection.cs
+@@ -1754,7 +1754,11 @@ namespace Microsoft.Build.Evaluation
+ #if FEATURE_WIN32_REGISTRY
+                 ToolsetRegistryReader registryReader = null,
+ #endif
++#if FEATURE_SYSTEM_CONFIGURATION
+                 ToolsetConfigurationReader configReader = null
++#else
++                object configReader = null
++#endif
+                 )
+         {
+             _toolsets = new Dictionary<string, Toolset>(StringComparer.OrdinalIgnoreCase);
+--- a/src/Build/Definition/ToolsetReader.cs
++++ b/src/Build/Definition/ToolsetReader.cs
+@@ -101,7 +101,11 @@ namespace Microsoft.Build.Evaluation
+ #if FEATURE_WIN32_REGISTRY
+             ToolsetRegistryReader registryReader,
+ #endif
++#if FEATURE_SYSTEM_CONFIGURATION
+             ToolsetConfigurationReader configurationReader,
++#else
++            object _configurationReader,
++#endif
+             PropertyDictionary<ProjectPropertyInstance> environmentProperties,
+             PropertyDictionary<ProjectPropertyInstance> globalProperties,
+             ToolsetDefinitionLocations locations
+@@ -120,6 +124,7 @@ namespace Microsoft.Build.Evaluation
+ 
+             if ((locations & ToolsetDefinitionLocations.ConfigurationFile) == ToolsetDefinitionLocations.ConfigurationFile)
+             {
++#if FEATURE_SYSTEM_CONFIGURATION
+                 if (configurationReader == null)
+                 {
+                     configurationReader = new ToolsetConfigurationReader(environmentProperties, globalProperties);
+@@ -129,6 +134,9 @@ namespace Microsoft.Build.Evaluation
+                 defaultToolsVersionFromConfiguration = configurationReader.ReadToolsets(toolsets, globalProperties,
+                     initialProperties, true /* accumulate properties */, out overrideTasksPathFromConfiguration,
+                     out defaultOverrideToolsVersionFromConfiguration);
++#else
++                throw new InvalidOperationException("ToolsetDefinitionLocations.ConfigurationFile not supported");
++#endif
+             }
+ 
+             string defaultToolsVersionFromRegistry = null;

@@ -1,0 +1,36 @@
+Index: a/src/Microsoft.DotNet.GitSync.CommitManager/Microsoft.DotNet.GitSync.CommitManager.csproj
+===================================================================
+--- a/src/Microsoft.DotNet.GitSync.CommitManager/Microsoft.DotNet.GitSync.CommitManager.csproj
++++ b/src/Microsoft.DotNet.GitSync.CommitManager/Microsoft.DotNet.GitSync.CommitManager.csproj
+@@ -5,6 +5,7 @@
+     <TargetFramework>netcoreapp3.1</TargetFramework>
+     <LangVersion>latest</LangVersion>
+     <ExcludeFromSourceBuild>true</ExcludeFromSourceBuild>
++    <UseAppHost>false</UseAppHost>
+   </PropertyGroup>
+ 
+   <ItemGroup>
+Index: a/src/Microsoft.DotNet.SwaggerGenerator/Microsoft.DotNet.SwaggerGenerator.CmdLine/Microsoft.DotNet.SwaggerGenerator.CmdLine.csproj
+===================================================================
+--- a/src/Microsoft.DotNet.SwaggerGenerator/Microsoft.DotNet.SwaggerGenerator.CmdLine/Microsoft.DotNet.SwaggerGenerator.CmdLine.csproj
++++ b/src/Microsoft.DotNet.SwaggerGenerator/Microsoft.DotNet.SwaggerGenerator.CmdLine/Microsoft.DotNet.SwaggerGenerator.CmdLine.csproj
+@@ -9,6 +9,7 @@
+     <ToolCommandName>dotnet-swaggergen</ToolCommandName>
+     <SignAssembly>false</SignAssembly>
+     <ExcludeFromSourceBuild>true</ExcludeFromSourceBuild>
++    <UseAppHost>false</UseAppHost>
+   </PropertyGroup>
+ 
+   <ItemGroup>
+Index: a/src/Microsoft.DotNet.XUnitConsoleRunner/src/Microsoft.DotNet.XUnitConsoleRunner.csproj
+===================================================================
+--- a/src/Microsoft.DotNet.XUnitConsoleRunner/src/Microsoft.DotNet.XUnitConsoleRunner.csproj
++++ b/src/Microsoft.DotNet.XUnitConsoleRunner/src/Microsoft.DotNet.XUnitConsoleRunner.csproj
+@@ -11,6 +11,7 @@
+     <VersionPrefix>2.5.1</VersionPrefix>
+     <ExcludeFromSourceBuild>true</ExcludeFromSourceBuild>
+     <RollForward>Major</RollForward>
++    <UseAppHost>false</UseAppHost>
+   </PropertyGroup>
+ 
+   <ItemGroup>
