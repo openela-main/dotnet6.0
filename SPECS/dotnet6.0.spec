@@ -1,4 +1,5 @@
-%bcond_with bootstrap
+# CentOS Koji doesn't understand %%bootstrap
+%bcond_with bootstrap_dotnet
 
 # Avoid provides/requires from private libraries
 %global privlibs             libhostfxr
@@ -20,10 +21,10 @@
 # until that's done, disable LTO.  This has to happen before setting the flags below.
 %define _lto_cflags %{nil}
 
-%global host_version 6.0.23
-%global runtime_version 6.0.23
+%global host_version 6.0.24
+%global runtime_version 6.0.24
 %global aspnetcore_runtime_version %{runtime_version}
-%global sdk_version 6.0.123
+%global sdk_version 6.0.124
 %global sdk_feature_band_version %(echo %{sdk_version} | sed -e 's|[[:digit:]][[:digit:]]$|00|')
 %global templates_version %{runtime_version}
 #%%global templates_version %%(echo %%{runtime_version} | awk 'BEGIN { FS="."; OFS="." } {print $1, $2, $3+1 }')
@@ -60,19 +61,20 @@
 
 Name:           dotnet6.0
 Version:        %{sdk_rpm_version}
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        .NET Runtime and SDK
 License:        MIT and ASL 2.0 and BSD and LGPLv2+ and CC-BY and CC0 and MS-PL and EPL-1.0 and GPL+ and GPLv2 and ISC and OFL and zlib
 URL:            https://github.com/dotnet/
 
-%if %{with bootstrap}
+%if %{with bootstrap_dotnet}
+%global bootstrap_sdk_version 6.0.120
 # The source is generated on a RHEL box via:
 # ./build-dotnet-tarball --bootstrap %%{upstream_tag}
 Source0:        dotnet-%{upstream_tag}-x64-bootstrap.tar.xz
 # Generated via ./build-arm64-bootstrap-tarball
-Source1:        dotnet-arm64-prebuilts-2021-10-29.tar.gz
+Source1:        dotnet-prebuilts-%{bootstrap_sdk_version}-arm64.tar.gz
 # Generated manually, same pattern as the arm64 tarball
-Source2:        dotnet-s390x-prebuilts-2021-10-29.tar.gz
+Source2:        dotnet-prebuilts-%{bootstrap_sdk_version}-s390x.tar.gz
 %else
 # The source is generated on a RHEL box via:
 # ./build-dotnet-tarball %%{upstream_tag}
@@ -85,7 +87,7 @@ Source11:       dotnet.sh.in
 
 # Fix using lld on RHEL
 Patch100:       runtime-arm64-lld-fix.patch
-#  Mono still has a dependency on (now unbuildable) ILStrip which was removed from CoreCLR: https://github.com/dotnet/runtime/pull/60315
+# Mono still has a dependency on (now unbuildable) ILStrip which was removed from CoreCLR: https://github.com/dotnet/runtime/pull/60315
 Patch101:       runtime-mono-remove-ilstrip.patch
 
 # Disable apphost, needed for s390x
@@ -122,7 +124,7 @@ ExclusiveArch:  x86_64
 BuildRequires:  clang
 BuildRequires:  cmake
 BuildRequires:  coreutils
-%if %{without bootstrap}
+%if %{without bootstrap_dotnet}
 BuildRequires:  dotnet-sdk-6.0
 BuildRequires:  dotnet-sdk-6.0-source-built-artifacts
 %endif
@@ -348,7 +350,7 @@ These are not meant for general use.
 
 
 %prep
-%if %{without bootstrap}
+%if %{without bootstrap_dotnet}
 %setup -q -n dotnet-%{upstream_tag}
 %else
 
@@ -368,11 +370,28 @@ tar xf packages/prebuilt/dotnet-sdk*.tar.gz -C .dotnet/
 rm packages/prebuilt/dotnet-sdk*.tar.gz
 boot_sdk_version=$(ls -1 .dotnet/sdk/)
 sed -i -E 's|"dotnet": "[^"]+"|"dotnet" : "'$boot_sdk_version'"|' global.json
+
+%ifarch ppc64le s390x
+ilasm_version=$(ls packages/prebuilt| grep -i ilasm | tr 'A-Z' 'a-z' | sed -E 's|runtime.linux-'%{runtime_arch}'.microsoft.netcore.ilasm.||' | sed -E 's|.nupkg$||')
+echo $ilasm_version
+
+mkdir -p packages-customized-local
+pushd packages-customized-local
+tar xf ../packages/archive/Private.SourceBuilt.Artifacts.*.tar.gz
+sed -i -E 's|<MicrosoftNETCoreILAsmVersion>[^<]+</MicrosoftNETCoreILAsmVersion>|<MicrosoftNETCoreILAsmVersion>'$ilasm_version'</MicrosoftNETCoreILAsmVersion>|' PackageVersions.props
+sed -i -E 's|<MicrosoftNETCoreILAsmPackageVersion>[^<]+</MicrosoftNETCoreILAsmPackageVersion>|<MicrosoftNETCoreILAsmPackageVersion>'$ilasm_version'</MicrosoftNETCoreILAsmPackageVersion>|' PackageVersions.props
+sed -i -E 's|<MicrosoftNETCoreILDAsmVersion>[^<]+</MicrosoftNETCoreILDAsmVersion>|<MicrosoftNETCoreILDAsmVersion>'$ilasm_version'</MicrosoftNETCoreILDAsmVersion>|' PackageVersions.props
+sed -i -E 's|<MicrosoftNETCoreILDAsmPackageVersion>[^<]+</MicrosoftNETCoreILDAsmPackageVersion>|<MicrosoftNETCoreILDAsmPackageVersion>'$ilasm_version'</MicrosoftNETCoreILDAsmPackageVersion>|' PackageVersions.props
+tar czf ../packages/archive/Private.SourceBuilt.Artifacts.*.tar.gz *
+popd
+
+%endif
+
 %endif
 
 %endif
 
-%if %{without bootstrap}
+%if %{without bootstrap_dotnet}
 # Remove all prebuilts
 find -iname '*.dll' -type f -delete
 find -iname '*.so' -type f -delete
@@ -438,7 +457,7 @@ sed -i -E 's|( /p:BuildDebPackage=false)|\1 --cmakeargs -DCLR_CMAKE_USE_SYSTEM_L
 %build
 cat /etc/os-release
 
-%if %{without bootstrap}
+%if %{without bootstrap_dotnet}
 # We need to create a copy because we will mutate this
 cp -a %{_libdir}/dotnet previously-built-dotnet
 %endif
@@ -480,7 +499,7 @@ export EXTRA_CXXFLAGS="$CXXFLAGS"
 export EXTRA_LDFLAGS="$LDFLAGS"
 
 VERBOSE=1 ./build.sh \
-%if %{without bootstrap}
+%if %{without bootstrap_dotnet}
     --with-sdk previously-built-dotnet \
 %endif
     -- \
@@ -612,41 +631,37 @@ rm -rf %{buildroot}%{_libdir}/dotnet/packs/NETStandard.Library.Ref/2.1.0
 
 
 %changelog
-* Wed Oct 04 2023 Omair Majid <omajid@redhat.com> - 6.0.123-1
+* Tue Oct 24 2023 Omair Majid <omajid@redhat.com> - 6.0.124-2
+- Update to .NET SDK 6.0.124 and Runtime 6.0.24
+- Resolves: RHEL-14466
+
+* Mon Oct 16 2023 Omair Majid <omajid@redhat.com> - 6.0.123-2
 - Update to .NET SDK 6.0.123 and Runtime 6.0.23
-- Resolves: RHEL-11694
+- Resolves: RHEL-11696
 
-* Fri Sep 01 2023 Omair Majid <omajid@redhat.com> - 6.0.122-1
+* Tue Sep 12 2023 Omair Majid <omajid@redhat.com> - 6.0.122-2
 - Update to .NET SDK 6.0.122 and Runtime 6.0.22
-- Resolves: RHEL-2012
+- Resolves: RHEL-1996
 
-* Wed Aug 02 2023 Omair Majid <omajid@redhat.com> - 6.0.121-1
+* Thu Aug 24 2023 Omair Majid <omajid@redhat.com> - 6.0.121-4
+- Disable bootstrap
+- Related: RHBZ#2228566
+
+* Wed Aug 23 2023 Omair Majid <omajid@redhat.com> - 6.0.121-3
+- Rebootstrap
+- Related: RHBZ#2228566
+
+* Wed Aug 09 2023 Omair Majid <omajid@redhat.com> - 6.0.121-2
 - Update to .NET SDK 6.0.121 and Runtime 6.0.21
-- Resolves: RHBZ#2228568
+- Resolves: RHBZ#2228566
 
-* Tue Jul 04 2023 Omair Majid <omajid@redhat.com> - 6.0.120-1
+* Tue Jul 11 2023 Omair Majid <omajid@redhat.com> - 6.0.120-2
 - Update to .NET SDK 6.0.120 and Runtime 6.0.20
-- Resolves: RHBZ#2219639
+- Resolves: RHBZ#2219636
 
-* Tue Jun 20 2023 Omair Majid <omajid@redhat.com> - 6.0.119-1
+* Thu Jul 06 2023 Omair Majid <omajid@redhat.com> - 6.0.119-2
 - Update to .NET SDK 6.0.119 and Runtime 6.0.19
-- Resolves: RHBZ#2216221
-
-* Thu Jun 01 2023 Andrew Slice <andrew.slice@redhat.com> - 6.0.118-1
-- Update to .NET SDK 6.0.118 and Runtime 6.0.18
-- Resolves: RHBZ#2212378
-
-* Thu May 04 2023 Omair Majid <omajid@redhat.com> - 6.0.117-2
-- Update to .NET SDK 6.0.117 and Runtime 6.0.17
-- Resolves: RHBZ#2190262
-
-* Wed Apr 12 2023 Omair Majid <omajid@redhat.com> - 6.0.116-2
-- Update to .NET SDK 6.0.116 and Runtime 6.0.16
-- Resolves: RHBZ#2183580
-
-* Wed Mar 15 2023 Omair Majid <omajid@redhat.com> - 6.0.115-2
-- Update to .NET SDK 6.0.115 and Runtime 6.0.15
-- Resolves: RHBZ#2174980
+- Resolves: RHBZ#2216218
 
 * Thu Feb 16 2023 Omair Majid <omajid@redhat.com> - 6.0.114-2
 - Update to .NET SDK 6.0.114 and Runtime 6.0.14
