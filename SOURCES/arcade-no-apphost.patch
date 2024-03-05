@@ -1,15 +1,3 @@
-Index: a/src/Microsoft.DotNet.GitSync.CommitManager/Microsoft.DotNet.GitSync.CommitManager.csproj
-===================================================================
---- a/src/Microsoft.DotNet.GitSync.CommitManager/Microsoft.DotNet.GitSync.CommitManager.csproj
-+++ b/src/Microsoft.DotNet.GitSync.CommitManager/Microsoft.DotNet.GitSync.CommitManager.csproj
-@@ -5,6 +5,7 @@
-     <TargetFramework>netcoreapp3.1</TargetFramework>
-     <LangVersion>latest</LangVersion>
-     <ExcludeFromSourceBuild>true</ExcludeFromSourceBuild>
-+    <UseAppHost>false</UseAppHost>
-   </PropertyGroup>
- 
-   <ItemGroup>
 Index: a/src/Microsoft.DotNet.SwaggerGenerator/Microsoft.DotNet.SwaggerGenerator.CmdLine/Microsoft.DotNet.SwaggerGenerator.CmdLine.csproj
 ===================================================================
 --- a/src/Microsoft.DotNet.SwaggerGenerator/Microsoft.DotNet.SwaggerGenerator.CmdLine/Microsoft.DotNet.SwaggerGenerator.CmdLine.csproj

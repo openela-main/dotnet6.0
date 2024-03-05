@@ -21,10 +21,10 @@
 # until that's done, disable LTO.  This has to happen before setting the flags below.
 %define _lto_cflags %{nil}
 
-%global host_version 6.0.24
-%global runtime_version 6.0.24
+%global host_version 6.0.27
+%global runtime_version 6.0.27
 %global aspnetcore_runtime_version %{runtime_version}
-%global sdk_version 6.0.124
+%global sdk_version 6.0.127
 %global sdk_feature_band_version %(echo %{sdk_version} | sed -e 's|[[:digit:]][[:digit:]]$|00|')
 %global templates_version %{runtime_version}
 #%%global templates_version %%(echo %%{runtime_version} | awk 'BEGIN { FS="."; OFS="." } {print $1, $2, $3+1 }')
@@ -61,7 +61,7 @@
 
 Name:           dotnet6.0
 Version:        %{sdk_rpm_version}
-Release:        2%{?dist}
+Release:        1%{?dist}
 Summary:        .NET Runtime and SDK
 License:        MIT and ASL 2.0 and BSD and LGPLv2+ and CC-BY and CC0 and MS-PL and EPL-1.0 and GPL+ and GPLv2 and ISC and OFL and zlib
 URL:            https://github.com/dotnet/
@@ -89,6 +89,8 @@ Source11:       dotnet.sh.in
 Patch100:       runtime-arm64-lld-fix.patch
 # Mono still has a dependency on (now unbuildable) ILStrip which was removed from CoreCLR: https://github.com/dotnet/runtime/pull/60315
 Patch101:       runtime-mono-remove-ilstrip.patch
+# https://github.com/dotnet/runtime/pull/95217#issuecomment-1842799362
+Patch102:       runtime-re-enable-implicit-rejection.patch
 
 # Disable apphost, needed for s390x
 Patch500:       fsharp-no-apphost.patch
@@ -412,6 +414,7 @@ sed -i 's|/usr/share/dotnet|%{_libdir}/dotnet|' src/runtime/src/native/corehost/
 pushd src/runtime
 %patch100 -p1
 %patch101 -p1
+%patch102 -p1
 popd
 
 pushd src/fsharp
@@ -631,6 +634,18 @@ rm -rf %{buildroot}%{_libdir}/dotnet/packs/NETStandard.Library.Ref/2.1.0
 
 
 %changelog
+* Thu Feb 01 2024 Omair Majid <omajid@redhat.com> - 6.0.127-1
+- Update to .NET SDK 6.0.127 and Runtime 6.0.27
+- Resolves: RHEL-23786
+
+* Wed Dec 20 2023 Omair Majid <omajid@redhat.com> - 6.0.126-1
+- Update to .NET SDK 6.0.126 and Runtime 6.0.26
+- Resolves: RHEL-19804
+
+* Thu Nov 02 2023 Omair Majid <omajid@redhat.com> - 6.0.125-1
+- Update to .NET SDK 6.0.125 and Runtime 6.0.25
+- Resolves: RHEL-15360
+
 * Tue Oct 24 2023 Omair Majid <omajid@redhat.com> - 6.0.124-2
 - Update to .NET SDK 6.0.124 and Runtime 6.0.24
 - Resolves: RHEL-14466
