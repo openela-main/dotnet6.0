@@ -20,10 +20,10 @@
 # until that's done, disable LTO.  This has to happen before setting the flags below.
 %define _lto_cflags %{nil}
 
-%global host_version 6.0.27
-%global runtime_version 6.0.27
+%global host_version 6.0.28
+%global runtime_version 6.0.28
 %global aspnetcore_runtime_version %{runtime_version}
-%global sdk_version 6.0.127
+%global sdk_version 6.0.128
 %global sdk_feature_band_version %(echo %{sdk_version} | sed -e 's|[[:digit:]][[:digit:]]$|00|')
 %global templates_version %{runtime_version}
 #%%global templates_version %%(echo %%{runtime_version} | awk 'BEGIN { FS="."; OFS="." } {print $1, $2, $3+1 }')
@@ -60,7 +60,7 @@
 
 Name:           dotnet6.0
 Version:        %{sdk_rpm_version}
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        .NET Runtime and SDK
 License:        MIT and ASL 2.0 and BSD and LGPLv2+ and CC-BY and CC0 and MS-PL and EPL-1.0 and GPL+ and GPLv2 and ISC and OFL and zlib
 URL:            https://github.com/dotnet/
@@ -88,6 +88,13 @@ Patch100:       runtime-arm64-lld-fix.patch
 Patch101:       runtime-mono-remove-ilstrip.patch
 # https://github.com/dotnet/runtime/pull/95218#issuecomment-1842799422
 Patch102:       runtime-re-enable-implicit-rejection.patch
+# We disable checking the signature of the last certificate in a chain
+# if the certificate is supposedly self-signed. A side effect of not
+# checking the self-signature of such a certificate is that disabled
+# or unsupported message digests used for the signature are not
+# treated as fatal errors. https://issues.redhat.com/browse/RHEL-25254
+Patch103:       runtime-openssl-sha1.patch
+
 
 # Disable apphost, needed for s390x
 Patch500:       fsharp-no-apphost.patch
@@ -378,6 +385,7 @@ pushd src/runtime
 %patch100 -p1
 %patch101 -p1
 %patch102 -p1
+%patch103 -p1
 popd
 
 pushd src/fsharp
@@ -612,6 +620,18 @@ rm -rf %{buildroot}%{_libdir}/dotnet/packs/NETStandard.Library.Ref/2.1.0
 
 
 %changelog
+* Wed Mar 06 2024 Tom Deseyn <tom.deseyn@gmail.com> - 6.0.128-2
+- We disable checking the signature of the last certificate in a chain
+  if the certificate is supposedly self-signed. A side effect of not
+  checking the self-signature of such a certificate is that disabled
+  or unsupported message digests used for the signature are not
+  treated as fatal errors.
+- Resolves: RHEL-28359
+
+* Thu Feb 29 2024 Omair Majid <omajid@redhat.com> - 6.0.128-1
+- Update to .NET SDK 6.0.128 and Runtime 6.0.28
+- Resolves: RHEL-27540
+
 * Thu Feb 01 2024 Omair Majid <omajid@redhat.com> - 6.0.127-1
 - Update to .NET SDK 6.0.127 and Runtime 6.0.27
 - Resolves: RHEL-23787
