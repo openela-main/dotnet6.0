@@ -71,9 +71,9 @@ index 55a044d62a6..e72d42e87d2 100644
 -            }
 -        }
 -
-         public static IEnumerable<object[]> OaepPaddingModes
+         [Fact]
+         public void Decrypt_Pkcs1_BadPadding()
          {
-             get
 @@ -726,23 +715,5 @@ public static IEnumerable<object[]> OaepPaddingModes
                  }
              }
