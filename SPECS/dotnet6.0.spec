@@ -60,7 +60,7 @@
 
 Name:           dotnet6.0
 Version:        %{sdk_rpm_version}
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        .NET Runtime and SDK
 License:        MIT and ASL 2.0 and BSD and LGPLv2+ and CC-BY and CC0 and MS-PL and EPL-1.0 and GPL+ and GPLv2 and ISC and OFL and zlib
 URL:            https://github.com/dotnet/
@@ -86,15 +86,8 @@ Source11:       dotnet.sh.in
 Patch100:       runtime-arm64-lld-fix.patch
 # Mono still has a dependency on (now unbuildable) ILStrip which was removed from CoreCLR: https://github.com/dotnet/runtime/pull/60315
 Patch101:       runtime-mono-remove-ilstrip.patch
-# https://github.com/dotnet/runtime/pull/95218#issuecomment-1842799422
+# https://github.com/dotnet/runtime/pull/95217#issuecomment-1842799362
 Patch102:       runtime-re-enable-implicit-rejection.patch
-# We disable checking the signature of the last certificate in a chain
-# if the certificate is supposedly self-signed. A side effect of not
-# checking the self-signature of such a certificate is that disabled
-# or unsupported message digests used for the signature are not
-# treated as fatal errors. https://issues.redhat.com/browse/RHEL-25254
-Patch103:       runtime-openssl-sha1.patch
-
 
 # Disable apphost, needed for s390x
 Patch500:       fsharp-no-apphost.patch
@@ -385,7 +378,6 @@ pushd src/runtime
 %patch100 -p1
 %patch101 -p1
 %patch102 -p1
-%patch103 -p1
 popd
 
 pushd src/fsharp
@@ -620,33 +612,25 @@ rm -rf %{buildroot}%{_libdir}/dotnet/packs/NETStandard.Library.Ref/2.1.0
 
 
 %changelog
-* Tue Apr 02 2024 Omair Majid <omajid@redhat.com> - 6.0.129-1
+* Tue Apr 09 2024 Omair Majid <omajid@redhat.com> - 6.0.129-2
 - Update to .NET SDK 6.0.129 and Runtime 6.0.29
-- Resolves: RHEL-31197
+- Resolves: RHEL-31198
 
-* Wed Mar 06 2024 Tom Deseyn <tom.deseyn@gmail.com> - 6.0.128-2
-- We disable checking the signature of the last certificate in a chain
-  if the certificate is supposedly self-signed. A side effect of not
-  checking the self-signature of such a certificate is that disabled
-  or unsupported message digests used for the signature are not
-  treated as fatal errors.
-- Resolves: RHEL-28359
-
-* Thu Feb 29 2024 Omair Majid <omajid@redhat.com> - 6.0.128-1
+* Tue Mar 19 2024 Omair Majid <omajid@redhat.com> - 6.0.128-2
 - Update to .NET SDK 6.0.128 and Runtime 6.0.28
-- Resolves: RHEL-27540
+- Resolves: RHEL-27541
 
-* Thu Feb 01 2024 Omair Majid <omajid@redhat.com> - 6.0.127-1
+* Wed Feb 14 2024 Omair Majid <omajid@redhat.com> - 6.0.127-2
 - Update to .NET SDK 6.0.127 and Runtime 6.0.27
-- Resolves: RHEL-23787
+- Resolves: RHEL-23785
 
-* Wed Dec 20 2023 Omair Majid <omajid@redhat.com> - 6.0.126-1
+* Mon Jan 15 2024 Omair Majid <omajid@redhat.com> - 6.0.126-2
 - Update to .NET SDK 6.0.126 and Runtime 6.0.26
-- Resolves: RHEL-19807
+- Resolves: RHEL-19801
 
-* Thu Nov 02 2023 Omair Majid <omajid@redhat.com> - 6.0.125-1
+* Mon Dec 11 2023 Omair Majid <omajid@redhat.com> - 6.0.125-2
 - Update to .NET SDK 6.0.125 and Runtime 6.0.25
-- Resolves: RHEL-15359
+- Resolves: RHEL-15349
 
 * Tue Oct 24 2023 Omair Majid <omajid@redhat.com> - 6.0.124-2
 - Update to .NET SDK 6.0.124 and Runtime 6.0.24
