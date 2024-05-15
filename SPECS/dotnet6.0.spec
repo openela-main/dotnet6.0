@@ -20,10 +20,10 @@
 # until that's done, disable LTO.  This has to happen before setting the flags below.
 %define _lto_cflags %{nil}
 
-%global host_version 6.0.29
-%global runtime_version 6.0.29
+%global host_version 6.0.30
+%global runtime_version 6.0.30
 %global aspnetcore_runtime_version %{runtime_version}
-%global sdk_version 6.0.129
+%global sdk_version 6.0.130
 %global sdk_feature_band_version %(echo %{sdk_version} | sed -e 's|[[:digit:]][[:digit:]]$|00|')
 %global templates_version %{runtime_version}
 #%%global templates_version %%(echo %%{runtime_version} | awk 'BEGIN { FS="."; OFS="." } {print $1, $2, $3+1 }')
@@ -60,7 +60,7 @@
 
 Name:           dotnet6.0
 Version:        %{sdk_rpm_version}
-Release:        2%{?dist}
+Release:        1%{?dist}
 Summary:        .NET Runtime and SDK
 License:        MIT and ASL 2.0 and BSD and LGPLv2+ and CC-BY and CC0 and MS-PL and EPL-1.0 and GPL+ and GPLv2 and ISC and OFL and zlib
 URL:            https://github.com/dotnet/
@@ -612,6 +612,10 @@ rm -rf %{buildroot}%{_libdir}/dotnet/packs/NETStandard.Library.Ref/2.1.0
 
 
 %changelog
+* Mon May 06 2024 Omair Majid <omajid@redhat.com> - 6.0.130-1
+- Update to .NET SDK 6.0.130 and Runtime 6.0.30
+- Resolves: RHEL-35310
+
 * Tue Apr 09 2024 Omair Majid <omajid@redhat.com> - 6.0.129-2
 - Update to .NET SDK 6.0.129 and Runtime 6.0.29
 - Resolves: RHEL-31198
