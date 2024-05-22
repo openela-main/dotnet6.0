@@ -21,10 +21,10 @@
 # until that's done, disable LTO.  This has to happen before setting the flags below.
 %define _lto_cflags %{nil}
 
-%global host_version 6.0.29
-%global runtime_version 6.0.29
+%global host_version 6.0.30
+%global runtime_version 6.0.30
 %global aspnetcore_runtime_version %{runtime_version}
-%global sdk_version 6.0.129
+%global sdk_version 6.0.130
 %global sdk_feature_band_version %(echo %{sdk_version} | sed -e 's|[[:digit:]][[:digit:]]$|00|')
 %global templates_version %{runtime_version}
 #%%global templates_version %%(echo %%{runtime_version} | awk 'BEGIN { FS="."; OFS="." } {print $1, $2, $3+1 }')
@@ -634,25 +634,29 @@ rm -rf %{buildroot}%{_libdir}/dotnet/packs/NETStandard.Library.Ref/2.1.0
 
 
 %changelog
-* Tue Apr 02 2024 Omair Majid <omajid@redhat.com> - 6.0.129-1
+* Mon May 06 2024 Omair Majid <omajid@redhat.com> - 6.0.130-1
+- Update to .NET SDK 6.0.130 and Runtime 6.0.30
+- Resolves: RHEL-35309
+
+* Tue Apr 09 2024 Omair Majid <omajid@redhat.com> - 6.0.129-2
 - Update to .NET SDK 6.0.129 and Runtime 6.0.29
-- Resolves: RHEL-31196
+- Resolves: RHEL-31194
 
-* Thu Feb 29 2024 Omair Majid <omajid@redhat.com> - 6.0.128-1
+* Tue Mar 19 2024 Omair Majid <omajid@redhat.com> - 6.0.128-2
 - Update to .NET SDK 6.0.128 and Runtime 6.0.28
-- Resolves: RHEL-27538
+- Resolves: RHEL-27539
 
-* Thu Feb 01 2024 Omair Majid <omajid@redhat.com> - 6.0.127-1
+* Wed Feb 14 2024 Omair Majid <omajid@redhat.com> - 6.0.127-2
 - Update to .NET SDK 6.0.127 and Runtime 6.0.27
-- Resolves: RHEL-23786
+- Resolves: RHEL-23784
 
-* Wed Dec 20 2023 Omair Majid <omajid@redhat.com> - 6.0.126-1
+* Mon Jan 15 2024 Omair Majid <omajid@redhat.com> - 6.0.126-2
 - Update to .NET SDK 6.0.126 and Runtime 6.0.26
-- Resolves: RHEL-19804
+- Resolves: RHEL-19798
 
-* Thu Nov 02 2023 Omair Majid <omajid@redhat.com> - 6.0.125-1
+* Mon Dec 11 2023 Omair Majid <omajid@redhat.com> - 6.0.125-2
 - Update to .NET SDK 6.0.125 and Runtime 6.0.25
-- Resolves: RHEL-15360
+- Resolves: RHEL-15348
 
 * Tue Oct 24 2023 Omair Majid <omajid@redhat.com> - 6.0.124-2
 - Update to .NET SDK 6.0.124 and Runtime 6.0.24
