@@ -20,10 +20,10 @@
 # until that's done, disable LTO.  This has to happen before setting the flags below.
 %define _lto_cflags %{nil}
 
-%global host_version 6.0.35
-%global runtime_version 6.0.35
+%global host_version 6.0.36
+%global runtime_version 6.0.36
 %global aspnetcore_runtime_version %{runtime_version}
-%global sdk_version 6.0.135
+%global sdk_version 6.0.136
 %global sdk_feature_band_version %(echo %{sdk_version} | sed -e 's|[[:digit:]][[:digit:]]$|00|')
 %global templates_version %{runtime_version}
 #%%global templates_version %%(echo %%{runtime_version} | awk 'BEGIN { FS="."; OFS="." } {print $1, $2, $3+1 }')
@@ -475,8 +475,7 @@ export COMPlus_LTTng=0
 export OPENSSL_ENABLE_SHA1_SIGNATURES=1
 %endif
 
-CheckEolTargetFramework=false VERBOSE=1 timeout 6h \
-    ./build.sh \
+CheckEolTargetFramework=false VERBOSE=1 ./build.sh \
 %if %{without bootstrap}
     --with-sdk previously-built-dotnet \
 %endif
@@ -613,25 +612,25 @@ rm -rf %{buildroot}%{_libdir}/dotnet/packs/NETStandard.Library.Ref/2.1.0
 
 
 %changelog
-* Sat Sep 28 2024 Omair Majid <omajid@redhat.com> - 6.0.135-1
+* Thu Oct 31 2024 Omair Majid <omajid@redhat.com> - 6.0.136-1
+- Update to .NET SDK 6.0.136 and Runtime 6.0.36
+- Resolves: RHEL-65365
+
+* Tue Oct 15 2024 Omair Majid <omajid@redhat.com> - 6.0.135-2
 - Update to .NET SDK 6.0.135 and Runtime 6.0.35
-- Resolves: RHEL-60798
+- Resolves: RHEL-60799
 
-* Thu Aug 29 2024 Omair Majid <omajid@redhat.com> - 6.0.134-1
-- Update to .NET SDK 6.0.134 and Runtime 6.0.34
-- Resolves: RHEL-56683
-
-* Thu Aug 01 2024 Omair Majid <omajid@redhat.com> - 6.0.133-1
+* Wed Aug 14 2024 Omair Majid <omajid@redhat.com> - 6.0.133-2
 - Update to .NET SDK 6.0.133 and Runtime 6.0.33
-- Resolves: RHEL-52386
+- Resolves: RHEL-52385
 
-* Thu Jun 27 2024 Omair Majid <omajid@redhat.com> - 6.0.132-1
+* Tue Jul 09 2024 Omair Majid <omajid@redhat.com> - 6.0.132-2
 - Update to .NET SDK 6.0.132 and Runtime 6.0.32
-- Resolves: RHEL-45321
+- Resolves: RHEL-45320
 
-* Mon May 06 2024 Omair Majid <omajid@redhat.com> - 6.0.130-1
+* Wed May 15 2024 Omair Majid <omajid@redhat.com> - 6.0.130-2
 - Update to .NET SDK 6.0.130 and Runtime 6.0.30
-- Resolves: RHEL-35310
+- Resolves: RHEL-35308
 
 * Tue Apr 09 2024 Omair Majid <omajid@redhat.com> - 6.0.129-2
 - Update to .NET SDK 6.0.129 and Runtime 6.0.29
